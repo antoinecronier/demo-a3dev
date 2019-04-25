@@ -33,7 +33,6 @@ public class JobControllerAdmin extends BaseAdminLinkedController<User> {
                     break;
                 }
             }
-            
             break;
 
         default:

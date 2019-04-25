@@ -8,6 +8,7 @@ import com.example.demo.controllers.admin.base.BaseAdminLinkedController;
 import com.example.demo.controllers.utils.UriUtils;
 import com.example.demo.entities.Role;
 import com.example.demo.entities.User;
+import com.example.demo.entities.utils.EntitiesMapping;
 
 @Controller
 @RequestMapping(value = {UriUtils.URI_SLASH + BaseAdminController.BASE_ADMIN_CONTROLLER_NAME + UriUtils.URI_SLASH + RoleControllerAdmin.ROLE_CONTROLLER_ADMIN_NAME})
@@ -17,5 +18,26 @@ public class RoleControllerAdmin extends BaseAdminLinkedController<Role> {
     
     protected RoleControllerAdmin() {
         super(ROLE_CONTROLLER_ADMIN_NAME, Role.class);
+    }
+
+    @Override
+    public Boolean checkEquality(Role item, Long externalId, String linkedItem) {
+        Boolean result = null;
+        
+        switch (linkedItem) {
+        case EntitiesMapping.USER_TO_ROLE:
+            for (User user : item.getUsers()) {
+                if (user.getId().equals(externalId)) {
+                    result = true;
+                    break;
+                }
+            }
+            break;
+
+        default:
+            break;
+        }
+        
+        return result;
     }
 }

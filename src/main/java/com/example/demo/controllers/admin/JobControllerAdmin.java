@@ -13,7 +13,7 @@ import com.example.demo.entities.utils.EntitiesMapping;
 
 @Controller
 @RequestMapping(value = {UriUtils.URI_SLASH + BaseAdminController.BASE_ADMIN_CONTROLLER_NAME + UriUtils.URI_SLASH + JobControllerAdmin.JOB_CONTROLLER_ADMIN_NAME})
-public class JobControllerAdmin extends BaseAdminLinkedController<User> {
+public class JobControllerAdmin extends BaseAdminLinkedController<Job> {
 
     public static final String JOB_CONTROLLER_ADMIN_NAME = "job";
     
@@ -22,13 +22,13 @@ public class JobControllerAdmin extends BaseAdminLinkedController<User> {
     }
 
     @Override
-    public Boolean checkEquality(User item, Long externalId, String linkedItem) {
+    public Boolean checkEquality(Job item, Long externalId, String linkedItem) {
         Boolean result = null;
         
         switch (linkedItem) {
         case EntitiesMapping.USER_TO_JOB:
-            for (Role role : item.getRoles()) {
-                if (role.getId().equals(externalId)) {
+            for (User user : item.getUsers()) {
+                if (user.getId().equals(externalId)) {
                     result = true;
                     break;
                 }

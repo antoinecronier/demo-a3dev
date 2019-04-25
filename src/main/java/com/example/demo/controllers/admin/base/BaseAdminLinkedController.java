@@ -1,6 +1,7 @@
 package com.example.demo.controllers.admin.base;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.example.demo.controllers.utils.MappedRoutes;
 import com.example.demo.controllers.utils.UriUtils;
 import com.example.demo.database.base.DbEntity;
+import com.example.demo.utils.DumpFields;
 
 public abstract class BaseAdminLinkedController<T extends DbEntity> extends BaseAdminController<T> implements LinkedCrudController<T> {
     
@@ -33,9 +35,11 @@ public abstract class BaseAdminLinkedController<T extends DbEntity> extends Base
     @Override
     @RequestMapping(value = {UriUtils.URI_EXTERNAL_INDEX_PATH}, method = RequestMethod.GET)
     public String index(Model model, @PathVariable @NotNull Long id, @PathVariable @NotNull String navigationPath) {
-        model.addAttribute("items",super.repository.findAll().stream()
+        model.addAttribute("view_name", this.controllerName + " filtered index");
+        ArrayList<Map<String, Object>> datas = DumpFields.listFielder(super.repository.findAll().stream()
             .filter((T) -> checkEquality(T, id, navigationPath))
                 .collect(Collectors.toList()));
+        model.addAttribute("items", datas);
         return UriUtils.URI_SLASH + this.controllerName + UriUtils.URI_INDEX_PATH;
     }
     
